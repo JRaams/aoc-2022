@@ -1,55 +1,44 @@
 const lines: string = await Deno.readTextFile("./input.txt");
 const input: string[] = lines.split("\n").filter((l) => l);
 
-/**
- * A -> Rock
- * B -> Paper
- * C -> Scissors
- */
+const ROCK = 1;
+const PAPER = 2;
+const SCISSORS = 3;
+const LOSE = 0;
+const DRAW = 3;
+const WIN = 6;
 
-/**
- * X -> Rock
- * Y -> Paper
- * Z -> Scissors
- */
-
-let score = 0;
-
-function getScore(opponentPlay: string, responsePlay: string): number {
+export function getScore(opponentPlay: string, responsePlay: string): number {
   if (opponentPlay === "A") {
     if (responsePlay === "X") {
-      return 1 + 3;
+      return ROCK + DRAW;
     } else if (responsePlay === "Y") {
-      return 2 + 6;
+      return PAPER + WIN;
     } else if (responsePlay === "Z") {
-      return 3 + 0;
-    } else {
-      throw new Error("Unknown response play: " + responsePlay);
+      return SCISSORS + LOSE;
     }
   } else if (opponentPlay === "B") {
     if (responsePlay === "X") {
-      return 1 + 0;
+      return ROCK + LOSE;
     } else if (responsePlay === "Y") {
-      return 2 + 3;
+      return PAPER + DRAW;
     } else if (responsePlay === "Z") {
-      return 3 + 6;
-    } else {
-      throw new Error("Unknown response play: " + responsePlay);
+      return SCISSORS + WIN;
     }
   } else if (opponentPlay === "C") {
     if (responsePlay === "X") {
-      return 1 + 6;
+      return ROCK + WIN;
     } else if (responsePlay === "Y") {
-      return 2 + 0;
+      return PAPER + LOSE;
     } else if (responsePlay === "Z") {
-      return 3 + 3;
-    } else {
-      throw new Error("Unknown response play: " + responsePlay);
+      return SCISSORS + DRAW;
     }
-  } else {
-    throw new Error("Unknown opponent play: " + opponentPlay);
   }
+
+  return 0;
 }
+
+let score = 0;
 
 input.forEach((line: string) => {
   const [opponentPlay, responsePlay] = line.split(" ");
