@@ -1,34 +1,13 @@
 const lines: string = await Deno.readTextFile("./input.txt");
 const input: string[] = lines.split("\n").filter((l) => l);
 
-export class RuckSack {
-  public allItems: string[];
-  public itemsA: string[];
-  public itemsB: string[];
-  public duplicateItem!: string;
-  public badge!: string;
-
-  constructor(items: string) {
-    this.allItems = items.split("");
-    this.itemsA = items.slice(0, items.length / 2).split("");
-    this.itemsB = items.slice(items.length / 2, items.length).split("");
-
-    this.itemsA.forEach((item) => {
-      if (this.itemsB.includes(item)) {
-        this.duplicateItem = item;
-        return;
-      }
-    });
-  }
-}
-
-export function findBadge(a: RuckSack, b: RuckSack, c: RuckSack): string {
-  for (let i = 0; i < a.allItems.length; i++) {
-    for (let j = 0; j < b.allItems.length; j++) {
-      for (let k = 0; k < c.allItems.length; k++) {
-        if (a.allItems[i] === b.allItems[j]) {
-          if (b.allItems[j] === c.allItems[k]) {
-            return a.allItems[i];
+export function findBadge(a: string[], b: string[], c: string[]): string {
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < b.length; j++) {
+      for (let k = 0; k < c.length; k++) {
+        if (a[i] === b[j]) {
+          if (b[j] === c[k]) {
+            return a[i];
           }
         }
       }
@@ -39,11 +18,10 @@ export function findBadge(a: RuckSack, b: RuckSack, c: RuckSack): string {
 }
 
 export function getBadges(lines: string[]): string[] {
-  const sacks: RuckSack[] = lines.map((line) => new RuckSack(line));
   const badges: string[] = [];
 
-  for (let i = 0; i < sacks.length - 2; i += 3) {
-    const [sack0, sack1, sack2] = sacks.slice(i, i + 3);
+  for (let i = 0; i < lines.length - 2; i += 3) {
+    const [sack0, sack1, sack2] = lines.slice(i, i + 3).map((l) => l.split(""));
     const badge = findBadge(sack0, sack1, sack2);
     badges.push(badge);
   }
