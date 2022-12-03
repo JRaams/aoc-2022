@@ -7,11 +7,6 @@ export class RuckSack {
   public duplicateItem!: string;
 
   constructor(items: string) {
-    // const compartmentA = items.slice(0, items.length / 2).split("");
-    // this.itemsA = compartmentA.filter((c) => c === c.toLowerCase());
-    // const compartmentB = items.slice(items.length / 2, items.length).split("");
-    // this.itemsB = compartmentB.filter((c) => c === c.toLowerCase());
-
     this.itemsA = items.slice(0, items.length / 2).split("");
     this.itemsB = items.slice(items.length / 2, items.length).split("");
 
