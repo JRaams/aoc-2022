@@ -3,7 +3,7 @@ interface File {
   size: number;
 }
 
-export interface Dir {
+interface Dir {
   name: string;
   parent?: Dir;
   subDirs: Dir[];
