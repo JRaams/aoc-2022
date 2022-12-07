@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.166.0/testing/asserts.ts";
-import { getSize, loadDirs } from "./a.ts";
+import { getSize, loadDirs } from "./dir.ts";
 
 const input = `$ cd /
 $ ls
