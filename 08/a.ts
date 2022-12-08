@@ -13,19 +13,19 @@ export function solve(forest: number[][]): number {
 
     for (let x = 1; x < row.length - 1; x++) {
       const col = forest.map((r) => r[x]);
-      const left = row.slice(0, x);
-      const right = row.slice(x + 1);
       const top = col.slice(0, y);
+      const right = row.slice(x + 1);
       const bottom = col.slice(y + 1);
+      const left = row.slice(0, x);
 
       const height = row[x];
-      if (left.every((tree) => tree < height)) {
+      if (top.every((t) => t < height)) {
         result++;
-      } else if (right.every((tree) => tree < height)) {
+      } else if (right.every((t) => t < height)) {
         result++;
-      } else if (top.every((tree) => tree < height)) {
+      } else if (bottom.every((t) => t < height)) {
         result++;
-      } else if (bottom.every((tree) => tree < height)) {
+      } else if (left.every((t) => t < height)) {
         result++;
       }
     }
