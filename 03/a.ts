@@ -1,26 +1,13 @@
 const lines: string = await Deno.readTextFile("./input.txt");
 const input: string[] = lines.split("\n").filter((l) => l);
 
-export class RuckSack {
-  public itemsA: string[];
-  public itemsB: string[];
-  public duplicateItem!: string;
-
-  constructor(items: string) {
-    this.itemsA = items.slice(0, items.length / 2).split("");
-    this.itemsB = items.slice(items.length / 2, items.length).split("");
-
-    this.itemsA.forEach((item) => {
-      if (this.itemsB.includes(item)) {
-        this.duplicateItem = item;
-        return;
-      }
-    });
-  }
-}
-
 export function findDuplicates(lines: string[]): string[] {
-  return lines.map((line) => new RuckSack(line)).map((r) => r.duplicateItem);
+  return lines.map((line) => {
+    const itemsA = line.slice(0, line.length / 2).split("");
+    const itemsB = line.slice(line.length / 2, line.length).split("");
+    const duplicateItems = itemsA.filter((x) => itemsB.includes(x));
+    return duplicateItems[0];
+  });
 }
 
 export function priority(item: string): number {

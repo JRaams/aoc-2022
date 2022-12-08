@@ -2,19 +2,9 @@ const lines: string = await Deno.readTextFile("./input.txt");
 const input: string[] = lines.split("\n").filter((l) => l);
 
 export function findBadge(a: string[], b: string[], c: string[]): string {
-  for (let i = 0; i < a.length; i++) {
-    for (let j = 0; j < b.length; j++) {
-      for (let k = 0; k < c.length; k++) {
-        if (a[i] === b[j]) {
-          if (b[j] === c[k]) {
-            return a[i];
-          }
-        }
-      }
-    }
-  }
-
-  throw new Error("no badge found");
+  const AB = a.filter((x) => b.includes(x));
+  const BC = AB.filter((x) => c.includes(x));
+  return BC[0];
 }
 
 export function getBadges(lines: string[]): string[] {
