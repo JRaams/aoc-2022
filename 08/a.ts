@@ -12,7 +12,7 @@ export function solve(forest: number[][]): number {
     const row = forest[y];
 
     for (let x = 1; x < row.length - 1; x++) {
-      const col = forest.map((row) => row[x]);
+      const col = forest.map((r) => r[x]);
       const left = row.slice(0, x);
       const right = row.slice(x + 1);
       const top = col.slice(0, y);
