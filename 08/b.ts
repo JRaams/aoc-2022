@@ -32,8 +32,7 @@ function getScenicScore(
     if (row[i] >= height) break;
   }
 
-  return scoreTop * scoreRight * scoreBottom *
-    scoreLeft;
+  return scoreTop * scoreRight * scoreBottom * scoreLeft;
 }
 
 function solve(forest: number[][]): number {
