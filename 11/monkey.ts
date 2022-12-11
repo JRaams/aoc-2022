@@ -1,5 +1,4 @@
 export class Monkey {
-  public inspects = 0;
   index: number;
   items: number[];
   operation: "multiplication" | "addition";
@@ -7,6 +6,7 @@ export class Monkey {
   testCase: number;
   testTrue: number;
   testFalse: number;
+  inspects = 0;
 
   constructor(i: string) {
     const lines = i.split("\n").filter((l) => l);
@@ -27,4 +27,30 @@ export class Monkey {
     this.testTrue = Number(testTrue);
     this.testFalse = Number(testFalse);
   }
+}
+
+export function simulateRound(
+  monkeys: Monkey[],
+  manageWorry: (_: number) => number,
+): void {
+  monkeys.forEach((monkey) => {
+    for (let itemIndex = monkey.items.length - 1; itemIndex >= 0; itemIndex--) {
+      monkey.inspects++;
+      let item = monkey.items[itemIndex];
+
+      const operand = monkey.operand === "old" ? item : Number(monkey.operand);
+      if (monkey.operation === "multiplication") {
+        item *= operand;
+      } else {
+        item += operand;
+      }
+      item = manageWorry(item);
+
+      const monkeyIndex = item % monkey.testCase === 0
+        ? monkey.testTrue
+        : monkey.testFalse;
+      monkey.items.splice(itemIndex, 1);
+      monkeys[monkeyIndex].items.push(item);
+    }
+  });
 }
