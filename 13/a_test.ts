@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.166.0/testing/asserts.ts";
-import { compare, FALSE, TRUE, Val } from "./a.ts";
+import { compare, FALSE, TRUE, Val } from "./compare.ts";
 
 Deno.test("compare [1,1,3,1,1] vs [1,1,5,1,1] -> true", () => {
   const a = [1, 1, 3, 1, 1];
