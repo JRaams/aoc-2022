@@ -1,44 +1,57 @@
 export interface Pos {
   x: number;
   y: number;
-  type: "rock" | "sand";
 }
 
-export function loadMap(traces: Pos[][]): [Record<string, Pos>, number] {
-  const coords: Record<string, Pos> = {};
-  let lowestPoint = 0;
+export interface Map {
+  coords: Record<string, Pos>;
+  lowestPoint: number;
+}
+
+function traceLine(map: Map, start: Pos, end: Pos): void {
+  const minX = Math.min(start.x, end.x);
+  const maxX = Math.max(start.x, end.x);
+  const minY = Math.min(start.y, end.y);
+  const maxY = Math.max(start.y, end.y);
+
+  for (let x = minX; x <= maxX; x++) {
+    for (let y = minY; y <= maxY; y++) {
+      const key = `${x},${y}`;
+      if (!map.coords[key]) {
+        const pos: Pos = { x, y };
+        map.coords[key] = pos;
+      }
+
+      if (y > map.lowestPoint) {
+        map.lowestPoint = y;
+      }
+    }
+  }
+}
+
+export function loadMap(): Map {
+  const line: string = Deno.readTextFileSync("./input.txt");
+  const traces: Pos[][] = line.split("\n").filter((l) => l)
+    .map((l) =>
+      l.split(" -> ")
+        .map((l) => l.split(",").map(Number))
+        .map((l) => ({ x: l[0], y: l[1] }))
+    );
+
+  const map: Map = {
+    coords: {},
+    lowestPoint: 0,
+  };
 
   traces.forEach((trace: Pos[]) => {
     let start = trace[0];
 
     for (let i = 1; i < trace.length; i++) {
       const end = trace[i];
-
-      for (
-        let x = Math.min(start.x, end.x);
-        x <= Math.max(start.x, end.x);
-        x++
-      ) {
-        for (
-          let y = Math.min(start.y, end.y);
-          y <= Math.max(start.y, end.y);
-          y++
-        ) {
-          const key = `${x},${y}`;
-          if (!coords[key]) {
-            const pos: Pos = { x, y, type: "rock" };
-            coords[key] = pos;
-          }
-
-          if (y > lowestPoint) {
-            lowestPoint = y;
-          }
-        }
-      }
-
+      traceLine(map, start, end);
       start = end;
     }
   });
 
-  return [coords, lowestPoint];
+  return map;
 }
