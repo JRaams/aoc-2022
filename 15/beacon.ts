@@ -3,8 +3,13 @@ export interface Pos {
   y: number;
 }
 
+export interface Sensor extends Pos {
+  index: number;
+  radius: number;
+}
+
 export interface SensorBeacon {
-  sensor: Pos;
+  sensor: Sensor;
   beacon: Pos;
 }
 
@@ -13,7 +18,7 @@ export function loadMap(): SensorBeacon[] {
   const input: string[] = lines.split("\n").filter((l) => l);
   const result: SensorBeacon[] = [];
 
-  input.forEach((line) => {
+  input.forEach((line, index) => {
     const parts = line.replace("Sensor at ", "").replace(
       ": closest beacon is",
       "",
@@ -22,9 +27,11 @@ export function loadMap(): SensorBeacon[] {
     const [sensorParts, beaconParts] = parts.map((p) =>
       p.split(", ").map((l) => Number(l.split("=")[1]))
     );
+    const radius = Math.abs(sensorParts[0] - beaconParts[0]) +
+      Math.abs(sensorParts[1] - beaconParts[1]);
 
     result.push({
-      sensor: { x: sensorParts[0], y: sensorParts[1] },
+      sensor: { x: sensorParts[0], y: sensorParts[1], radius, index },
       beacon: { x: beaconParts[0], y: beaconParts[1] },
     });
   });

@@ -1,18 +1,13 @@
 import { loadMap } from "./beacon.ts";
 
-export function solve(): number {
+export function solve(Y: number): number {
   const map = loadMap();
   const coveredPos = new Set<string>();
-  //   const Y = 10;
-  const Y = 2000000;
 
-  map.forEach(({ sensor, beacon }) => {
-    const dist = Math.abs(sensor.x - beacon.x) + Math.abs(sensor.y - beacon.y);
-    const radius = dist - Math.abs(Y - sensor.y);
+  map.forEach(({ sensor }) => {
+    const dist = sensor.radius - Math.abs(Y - sensor.y);
 
-    for (let dx = -radius; dx <= radius; dx++) {
-      //   const pos = { x: sensor.x + dx, y: Y };
-      //   coveredPos.add(JSON.stringify(pos));
+    for (let dx = -dist; dx <= dist; dx++) {
       coveredPos.add(`${sensor.x + dx},${Y}`);
     }
   });
@@ -24,4 +19,4 @@ export function solve(): number {
   return coveredPos.size;
 }
 
-console.info(solve());
+console.info(solve(2000000));
