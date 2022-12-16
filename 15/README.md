@@ -155,3 +155,5 @@ this distress beacon is 56000011.
 
 Find the only possible position for the distress beacon. What is its tuning
 frequency?
+
+Your puzzle answer was `10826395253551`.
