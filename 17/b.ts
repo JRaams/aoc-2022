@@ -3,11 +3,10 @@ import { CreateShape, Shape } from "./shape.ts";
 const line: string = await Deno.readTextFile("./input.txt");
 const input: string = line.split("\n")[0];
 
-function solve(gasJets: string): number {
+function solve(gasJets: string): void {
+  const shapes: Shape[] = [];
   let gasJetIndex = 0;
   let highestY = 0;
-  const shapes: Shape[] = [];
-
   let prevHighest = 0;
   let prevRockIndex = 0;
 
@@ -42,11 +41,9 @@ function solve(gasJets: string): number {
     highestY = Math.max(highestY, shape.highestY + 1);
     shapes.push(shape);
   }
-
-  return highestY;
 }
 
-console.info(solve(input));
+solve(input);
 
 /**
  *
@@ -58,6 +55,7 @@ i: 5229 indexDiff: 1745 heightDiff: 2767 height: 8288
 i: 6974 indexDiff: 1745 heightDiff: 2767 height: 11055
 i: 8719 indexDiff: 1745 heightDiff: 2767 height: 13822
 i: 10464 indexDiff: 1745 heightDiff: 2767 height: 16589
+^C
 ======
 
 First time -> After 1739 rocks and a height of 2754, a pattern is created:
@@ -65,6 +63,6 @@ First time -> After 1739 rocks and a height of 2754, a pattern is created:
 
 To get height after 1000000000000th rock:
 
-(1000000000000 - 1739) * (2767/1745) + 2654
+(1000000000000 - 1739) * (2767/1745) + 2754
 = 1585673352332
  */
