@@ -78,12 +78,6 @@ export abstract class Shape {
   }
 }
 
-export interface Chamber {
-  shapes: Shape[];
-  currentShape: Shape | undefined;
-  highestY: number;
-}
-
 /**
  * |..@@@@.|
  */
