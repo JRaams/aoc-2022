@@ -32,6 +32,10 @@ export function loadValves(): Valve[] {
   return valves;
 }
 
+export function totalFlowRate(valves: Valve[]): number {
+  return valves.reduce((sum: number, current: Valve) => sum + current.rate, 0);
+}
+
 // https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
 export type DistMap = Record<string, Record<string, number>>;
 export function calcDistances(valves: Valve[]): DistMap {

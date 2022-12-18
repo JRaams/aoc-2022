@@ -1,8 +1,10 @@
-import { calcDistances, DistMap, loadValves, Valve } from "./valve.ts";
-
-function totalFlowRate(valves: Valve[]): number {
-  return valves.reduce((sum: number, current: Valve) => sum + current.rate, 0);
-}
+import {
+  calcDistances,
+  DistMap,
+  loadValves,
+  totalFlowRate,
+  Valve,
+} from "./valve.ts";
 
 function dfs(
   current: Valve,
@@ -12,17 +14,20 @@ function dfs(
   usefulValves: Valve[],
   dists: DistMap,
 ): number {
+  // Calculate total cumulative flow for every open valve in the remaining time
   let max: number = total + totalFlowRate(open) * (30 - time);
 
   usefulValves.forEach((next) => {
+    // If next is already open, don't bother
     if (open.find((o) => o.name === next.name)) return;
 
+    // If next is unreachable in the remaining time, don't bother
     const dt: number = dists[current.name][next.name] + 1;
     if (time + dt >= 30) return;
 
+    // Move to next valve and open it
     const newTotal: number = total + dt * totalFlowRate(open);
     open.push(next);
-
     const value: number = dfs(
       next,
       time + dt,
@@ -31,8 +36,9 @@ function dfs(
       usefulValves,
       dists,
     );
-    if (max < value) max = value;
 
+    // Close valve again, if the found route is better than 'max', save it
+    if (max < value) max = value;
     const nextIndex = open.findIndex((o) => o.name === next.name);
     open.splice(nextIndex, 1);
   });
