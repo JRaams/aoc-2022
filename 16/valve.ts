@@ -3,7 +3,6 @@ export interface Valve {
   rate: number;
   neighBours: Valve[];
   nbStr: string;
-  isOpen: boolean;
 }
 
 const REGEX = /Valve (\w+).*=(\d+).*valves? (.*)/g;
@@ -19,7 +18,6 @@ export function loadValves(): Valve[] {
       rate: Number(_[2]),
       nbStr: _[3],
       neighBours: [],
-      isOpen: false,
     };
   });
 
@@ -30,10 +28,6 @@ export function loadValves(): Valve[] {
   });
 
   return valves;
-}
-
-export function totalFlowRate(valves: Valve[]): number {
-  return valves.reduce((sum: number, current: Valve) => sum + current.rate, 0);
 }
 
 // https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
