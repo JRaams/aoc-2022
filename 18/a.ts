@@ -1,39 +1,17 @@
-interface Droplet {
-  x: number;
-  y: number;
-  z: number;
-  neighbours: Droplet[];
+import { getCubeSides, loadDroplets, Pos } from "./droplet.ts";
+
+function hasPos(drops: Pos[], pos: Pos): boolean {
+  return !!drops.find((d) => d.x === pos.x && d.y === pos.y && d.z === pos.z);
 }
 
-export function loadDroplets(): Droplet[] {
-  const line: string = Deno.readTextFileSync("./input.txt");
-  const droplets: Droplet[] = line.split("\n").filter((l) => l).map((l) => {
-    const [x, y, z] = l.split(",").map(Number);
-    return { x, y, z, neighbours: [] };
-  });
+function solve(): number {
+  const [drops, _] = loadDroplets();
 
-  droplets.forEach((d) => {
-    droplets.forEach((nb) => {
-      const dist = Math.abs(d.x - nb.x) + Math.abs(d.y - nb.y) +
-        Math.abs(d.z - nb.z);
-      if (dist === 1) {
-        d.neighbours.push(nb);
-      }
-    });
-  });
+  const surfaceDroplets = drops
+    .flatMap((drop) => getCubeSides(drop))
+    .filter((side) => !hasPos(drops, side));
 
-  return droplets;
-}
-
-export function solve(): number {
-  const dropLets: Droplet[] = loadDroplets();
-  let surfaceArea = 0;
-
-  dropLets.forEach((d) => {
-    surfaceArea += 6 - d.neighbours.length;
-  });
-
-  return surfaceArea;
+  return surfaceDroplets.length;
 }
 
 console.info(solve());
