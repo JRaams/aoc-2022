@@ -1,5 +1,6 @@
 import { Blueprint, loadInput } from "./blueprint.ts";
-import { Inventory, maxGeodeCount } from "./inventory.ts";
+import { maxGeodeCount } from "./factory.ts";
+import { Inventory } from "./inventory.ts";
 
 function solve(): number {
   const bluePrints: Blueprint[] = loadInput();
