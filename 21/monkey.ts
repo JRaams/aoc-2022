@@ -6,10 +6,11 @@ export abstract class Monkey {
   }
 
   public abstract calculate(): number;
+  public abstract print(): string;
 }
 
 export class NumberMonkey extends Monkey {
-  private value: number;
+  public value: number;
 
   constructor(name: string, value: number) {
     super(name);
@@ -19,12 +20,19 @@ export class NumberMonkey extends Monkey {
   public calculate(): number {
     return this.value;
   }
+
+  public print(): string {
+    if (this.name === "humn") {
+      return "humn";
+    }
+    return `${this.value}`;
+  }
 }
 
 export class OperationMonkey extends Monkey {
   public monkeyA!: Monkey;
   public monkeyB!: Monkey;
-  private operation: string;
+  public operation: string;
 
   constructor(name: string, operation: string) {
     super(name);
@@ -44,6 +52,10 @@ export class OperationMonkey extends Monkey {
       default:
         throw new Error(`Invalid operation: ${this.operation}`);
     }
+  }
+
+  public print(): string {
+    return `(${this.monkeyA.print()}${this.operation}${this.monkeyB.print()})`;
   }
 }
 
