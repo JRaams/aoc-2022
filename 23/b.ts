@@ -1,3 +1,15 @@
-const lines: string = await Deno.readTextFile("./input.txt");
-const input: number[] = lines.split("\n").filter((l) => l).map(Number);
+import { loadState, State } from "./elf.ts";
 
+function solve(): number {
+  const state: State = loadState();
+
+  let round = 1;
+  while (true) {
+    if (!state.doRound()) {
+      return round;
+    }
+    round++;
+  }
+}
+
+console.info(solve());
