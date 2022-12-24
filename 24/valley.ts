@@ -84,19 +84,8 @@ export class Valley {
     const visited = new Set<string>();
     visited.add(`${startNode.x},${startNode.y},${startNode.time}`);
 
-    const prev: Record<string, string | null> = {};
-    prev[`${startNode.x},${startNode.y},${startNode.time}`] = null;
-
     for (let node: Node | undefined; node = queue.dequeue();) {
       if (node.x === end.x && node.y === end.y) {
-        let hash: string | null = `${node!.x},${node!.y},${node!.time}`;
-
-        while (hash) {
-          console.info(hash);
-          hash = prev[hash];
-        }
-
-        console.info("reached the end");
         return node.time;
       }
 
@@ -112,9 +101,6 @@ export class Valley {
 
         queue.enqueue(move);
         visited.add(`${move.x},${move.y},${move.time}`);
-        prev[`${move.x},${move.y},${move.time}`] = `${node!.x},${node!.y},${
-          node!.time
-        }`;
       });
     }
 
@@ -151,7 +137,7 @@ export function loadValley(input: string[]): [Valley, Blizzard[]] {
 /**
  * Create a forecast of all possible blizzard states, key = minute % period
  */
-export function createForecast(b: Blizzard[], v: Valley): [Forecast, number] {
+export function createForecast(b: Blizzard[], v: Valley): void {
   const forecast: Forecast = {
     0: JSON.parse(JSON.stringify(b)),
   };
@@ -164,8 +150,6 @@ export function createForecast(b: Blizzard[], v: Valley): [Forecast, number] {
 
   v.forecast = forecast;
   v.period = period;
-
-  return [forecast, period];
 }
 
 function tickBlizzards(b: Blizzard[], v: Valley): void {
