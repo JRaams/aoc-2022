@@ -1,11 +1,5 @@
 import { getPassword, loadBoard, TileMap } from "./board.ts";
 
-/**
-x12
-x3x
-45x
-6xx
- */
 const FW = 50;
 
 export function markFaces(tileMap: TileMap): void {
@@ -78,7 +72,7 @@ export function stitchEdges(tileMap: TileMap): void {
     f2.right = f5;
     f5.right = f2;
   }
-  // Face 2, down -> Face 3, right
+  // Face 2, bottom -> Face 3, right
   for (let x = 0; x < FW; x++) {
     const f2 = tileMap[1 * FW - 1][2 * FW + x];
     const f3 = tileMap[1 * FW + x][2 * FW - 1];
@@ -86,9 +80,9 @@ export function stitchEdges(tileMap: TileMap): void {
     f2.bottom = f3;
     f3.right = f2;
   }
-  // Face 3, right -> Face 2, down (Done)
+  // Face 3, right -> Face 2, bottom (Done)
   // Face 5, right -> Face 2, right (Done)
-  // Face 5, down -> Face 6, right
+  // Face 5, bottom -> Face 6, right
   for (let x = 0; x < FW; x++) {
     const f5 = tileMap[3 * FW - 1][1 * FW + x];
     const f6 = tileMap[3 * FW + x][1 * FW - 1];
@@ -96,7 +90,7 @@ export function stitchEdges(tileMap: TileMap): void {
     f5.bottom = f6;
     f6.right = f5;
   }
-  // Face 6, right -> Face 5, down (Done)
+  // Face 6, right -> Face 5, bottom (Done)
   // Face 6, bottom -> Face 2, top (Done)
   // Face 6, left -> Face 1, top (Done)
   // Face 4, left -> Face 1, left (Done)
@@ -121,7 +115,3 @@ function solve(): number {
 }
 
 console.info(solve());
-
-// 115043 too low
-// 131384 too high
-// 134396 Too high

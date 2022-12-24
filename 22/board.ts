@@ -1,43 +1,47 @@
+export const RIGHT = 0;
+export const BOTTOM = 1;
+export const LEFT = 2;
+export const UP = 3;
+
 // Dict for every face
 // Value is another dict for the next face
-// 0: Right, 1: Bottom, 2: Left, 3: Up
 const dirs: Record<number, Record<number, number>> = {
   1: {
     // Top, right, bottom, left
-    6: 0,
-    2: 0,
-    3: 1,
-    4: 0,
+    6: RIGHT,
+    2: RIGHT,
+    3: BOTTOM,
+    4: RIGHT,
   },
   2: {
-    6: 3,
-    5: 2,
-    3: 2,
-    1: 2,
+    6: UP,
+    5: LEFT,
+    3: LEFT,
+    1: LEFT,
   },
   3: {
-    1: 3,
-    2: 3,
-    5: 1,
-    4: 1,
+    1: UP,
+    2: UP,
+    5: BOTTOM,
+    4: BOTTOM,
   },
   4: {
-    3: 0,
-    5: 0,
-    6: 1,
-    1: 0,
+    3: RIGHT,
+    5: RIGHT,
+    6: BOTTOM,
+    1: RIGHT,
   },
   5: {
-    3: 3,
-    2: 2,
-    6: 2,
-    4: 2,
+    3: UP,
+    2: LEFT,
+    6: LEFT,
+    4: LEFT,
   },
   6: {
-    4: 3,
-    5: 3,
-    2: 1,
-    1: 1,
+    4: UP,
+    5: UP,
+    2: BOTTOM,
+    1: BOTTOM,
   },
 };
 
@@ -62,30 +66,25 @@ export class Tile {
     let current: Tile = this;
 
     for (let i = 0; i < amount; i++) {
-      // Right
-      if (dir === 0) {
+      if (dir === RIGHT) {
         if (!current.right!.isOpen) return [current, dir];
-
         if (current.face !== current.right!.face) {
           dir = dirs[current.face!][current.right!.face!];
         }
         current = current.right!;
-        // Down
-      } else if (dir === 1) {
+      } else if (dir === BOTTOM) {
         if (!current.bottom!.isOpen) return [current, dir];
         if (current.face !== current.bottom!.face) {
           dir = dirs[current.face!][current.bottom!.face!];
         }
         current = current.bottom!;
-        // Left
-      } else if (dir === 2) {
+      } else if (dir === LEFT) {
         if (!current.left!.isOpen) return [current, dir];
         if (current.face !== current.left!.face) {
           dir = dirs[current.face!][current.left!.face!];
         }
         current = current.left!;
-        // Top
-      } else if (dir === 3) {
+      } else if (dir === UP) {
         if (!current.top!.isOpen) return [current, dir];
         if (current.face !== current.top!.face) {
           dir = dirs[current.face!][current.top!.face!];
@@ -193,45 +192,30 @@ export function loadBoard(): [TileMap, Move[]] {
   return [tileMap, moves];
 }
 
-export function move(
-  currentTile: Tile,
-  dir: number,
-  amount: number,
-  direction: string | undefined,
-): [Tile, number] {
-  const [t, d] = currentTile.move(amount, dir);
-  currentTile = t;
-  dir = d;
-
-  switch (direction) {
-    case "L": {
-      dir = (dir - 1 + 4) % 4;
-      break;
-    }
-    case "R": {
-      dir = (dir + 1 + 4) % 4;
-      break;
-    }
-    default:
-      break;
-  }
-
-  return [currentTile, dir];
-}
-
 export function getPassword(tileMap: TileMap, moves: Move[]): number {
   const firstTile = Object.values(tileMap[0]).find((l) => l)!;
   let currentTile: Tile = firstTile;
   let dir = 0;
-  // 0: Right, 1: Bottom, 2: Left, 3: Up
+
   for (let i = 0; i < moves.length; i++) {
     const { amount, direction } = moves[i];
-    if (i === 55) {
-      const a = 5;
+
+    const [t, d] = currentTile.move(amount, dir);
+    currentTile = t;
+    dir = d;
+
+    switch (direction) {
+      case "L": {
+        dir = (dir - 1 + 4) % 4;
+        break;
+      }
+      case "R": {
+        dir = (dir + 1 + 4) % 4;
+        break;
+      }
+      default:
+        break;
     }
-    const [a, b] = move(currentTile, dir, amount, direction);
-    currentTile = a;
-    dir = b;
   }
 
   const row = currentTile.y + 1;
