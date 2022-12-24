@@ -17,8 +17,8 @@ export interface Node extends Tile {
 
 // { y: { x: Tile }}
 export type Map = Record<number, Record<number, Tile>>;
-// { [minute]: Blizzard[] }
-export type Forecast = Record<number, Blizzard[]>;
+// { [minute]: { [y+x intpack]: Blizzard }} }
+export type Forecast = Record<number, Record<number, Blizzard>>;
 
 const dirs: Record<string, Pos> = {
   ">": { x: 1, y: 0 },
@@ -78,11 +78,10 @@ export class Valley {
   traverse(start: Tile, end: Tile, time: number): number {
     const startNode: Node = { ...start, time };
 
-    const queue = new Queue<Node>();
-    queue.enqueue(startNode);
-
-    const visited = new Set<string>();
-    visited.add(`${startNode.x},${startNode.y},${startNode.time}`);
+    const queue = new Queue<Node>(startNode);
+    const visited = new Set<number>([
+      startNode.x | startNode.y << 8 | startNode.time << 16,
+    ]);
 
     for (let node: Node | undefined; node = queue.dequeue();) {
       if (node.x === end.x && node.y === end.y) {
@@ -91,16 +90,16 @@ export class Valley {
 
       const possibleMoves = this.getPossibleMoves(node);
       possibleMoves.forEach((move) => {
-        if (visited.has(`${move.x},${move.y},${move.time}`)) return;
+        if (visited.has(move.x | move.y << 8 | move.time << 16)) return;
 
-        const currentWeather: Blizzard[] =
+        const currentWeather: Record<number, Blizzard> =
           this.forecast[move.time % this.period];
-        if (currentWeather.find((b) => b.x === move.x && b.y === move.y)) {
+        if (currentWeather[move.y | move.x << 16]) {
           return;
         }
 
         queue.enqueue(move);
-        visited.add(`${move.x},${move.y},${move.time}`);
+        visited.add(move.x | move.y << 8 | move.time << 16);
       });
     }
 
@@ -137,15 +136,20 @@ export function loadValley(input: string[]): [Valley, Blizzard[]] {
 /**
  * Create a forecast of all possible blizzard states, key = minute % period
  */
-export function createForecast(b: Blizzard[], v: Valley): void {
-  const forecast: Forecast = {
-    0: JSON.parse(JSON.stringify(b)),
-  };
+export function createForecast(blizzards: Blizzard[], v: Valley): void {
+  const forecast: Forecast = {};
   const period = lcm(v.width - 2, v.height - 2);
 
-  for (let i = 1; i < period; i++) {
-    tickBlizzards(b, v);
-    forecast[i] = JSON.parse(JSON.stringify(b));
+  for (let i = 0; i < period; i++) {
+    const bf: Record<number, Blizzard> = {};
+    blizzards.forEach((b) => {
+      bf[b.y | b.x << 16] = b;
+    });
+
+    forecast[i] = bf;
+    if (i !== period - 1) {
+      tickBlizzards(blizzards, v);
+    }
   }
 
   v.forecast = forecast;

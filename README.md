@@ -40,7 +40,7 @@ Run part A or B, while allowing all permissions
 
 Debugging in Visual Studio Code
 
-1. Open de desired file in the editor
+1. Open the desired file in the editor
 
 2. Set breakpoints
 

@@ -3,10 +3,10 @@ export class Queue<T> {
   private head: number;
   private tail: number;
 
-  constructor() {
-    this.elements = {};
+  constructor(...elements: T[]) {
+    this.elements = { ...elements };
     this.head = 0;
-    this.tail = 0;
+    this.tail = elements.length;
   }
 
   public enqueue(element: T): void {
